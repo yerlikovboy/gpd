@@ -31,7 +31,7 @@ func WithSeed(seed int64) db.SudokuDB {
 
 func (s CouchSudokuDB) puzzle_count() uint32 {
 
-	req, _ := http.NewRequest("GET", "http://hostname:5984/sudoku/_design/puzzles/_view/completed", nil)
+	req, _ := http.NewRequest("GET", "http://hostname:5984/grids/_design/puzzles/_view/completed", nil)
 	s.cfg.SetupRequest(req)
 
 	// the way query is set is so lame ...
@@ -62,7 +62,7 @@ func (s CouchSudokuDB) nth_grid(n uint32) grid {
 
 	// log.Printf("pick #%v from view", n)
 
-	req, _ := http.NewRequest("GET", "http://localhost:5984/sudoku/_design/puzzles/_view/completed?limit=1", nil)
+	req, _ := http.NewRequest("GET", "http://localhost:5984/grids/_design/puzzles/_view/completed?limit=1", nil)
 	s.cfg.SetupRequest(req)
 
 	// the way query is set is bullshit!
@@ -88,8 +88,7 @@ func (s CouchSudokuDB) nth_grid(n uint32) grid {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	log.Printf("respnse: %v", r)
+	// log.Printf("response: %v", r)
 	if len(r.Rows) == 0 {
 		log.Fatal("unable to retrieve puzzle (rows len == 0)")
 	}

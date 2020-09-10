@@ -39,11 +39,19 @@ func DefaultConfig() Config {
 		host: db_hostname(),
 		port: db_port(),
 		creds: auth{
-			use_auth: true,
+			use_auth: use_auth(),
 			admin:    admin(),
 			pw:       pw(),
 		},
 	}
+}
+
+func use_auth() bool {
+	use_auth := os.Getenv("DB_NO_AUTH")
+	if use_auth == "" {
+		return true
+	}
+	return false
 }
 
 func db_port() string {
