@@ -7,15 +7,16 @@ import (
 	"flag"
 )
 
-func app(is_daemon bool, n_clues uint8) { 
-	for { 
-	db := couchdb.New()
-	g := db.Solution()
-	p := puzzler.Make(g, n_clues)
-	db.StorePuzzle(p) 
-	if !is_daemon  { 
-		break;
-	}
+func app(is_daemon bool, n_clues uint8) {
+	for {
+		db := couchdb.New()
+		g := db.Solution()
+		p := puzzler.Make(g, n_clues)
+		db.StorePuzzle(p)
+
+		if !is_daemon {
+			break
+		}
 
 	}
 

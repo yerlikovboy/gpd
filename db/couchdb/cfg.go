@@ -80,7 +80,7 @@ func admin() string {
 
 func pw() string {
 	pw := os.Getenv("DB_PW")
-	if len(pw) == 0 {
+	if len(pw) == 0 && use_auth() {
 		log.Fatal("unable to retrieve db password (DB_PW not set)")
 	}
 	return pw
