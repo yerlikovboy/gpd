@@ -11,7 +11,8 @@ func Make(g sudoku.Board, n_clues uint8) sudoku.Board {
 
 	var i uint8
 	i = 0
-	for {
+	n_blanks := 81 - n_clues
+	for i < n_blanks {
 		p := picker.Pick()
 
 		if g.Cells[p] != 0 {
@@ -19,9 +20,11 @@ func Make(g sudoku.Board, n_clues uint8) sudoku.Board {
 			i++
 		}
 
-		if i == n_clues {
-			break
-		}
+		/*
+			if i == n_blanks {
+				break
+			}
+		*/
 	}
 
 	var grid sudoku.Grid

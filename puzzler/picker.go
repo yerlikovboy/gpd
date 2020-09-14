@@ -1,17 +1,18 @@
 package puzzler
 
 import (
+	"gpd/utils"
 	"math/rand"
 	"time"
 )
 
 type Picker struct {
 	// key: # of times picked, values: set of rows
-	rowCount map[int]IntSet
+	rowCount map[int]utils.IntSet
 }
 
-func initSet() IntSet {
-	s := NewIntSet()
+func initSet() utils.IntSet {
+	s := utils.NewIntSet()
 
 	for i := 0; i < 9; i++ {
 		s.Add(i)
@@ -26,34 +27,20 @@ func NewPicker() Picker {
 func NewPickerWithSeed(seed int64) Picker {
 	rand.Seed(seed)
 	p := Picker{
-		rowCount: make(map[int]IntSet),
+		rowCount: make(map[int]utils.IntSet),
 	}
 
 	p.rowCount[0] = initSet()
-
 	return p
 }
 
-func (p Picker) GetN(n int) IntSet {
+func (p Picker) GetN(n int) utils.IntSet {
 
 	if _, ok := p.rowCount[n]; !ok {
-		p.rowCount[n] = NewIntSet()
+		p.rowCount[n] = utils.NewIntSet()
 	}
 
 	return p.rowCount[n]
-}
-
-func (p Picker) TimesPicked(r int) int {
-	if r > 8 {
-		return 0
-	}
-
-	for i := 0; ; i++ {
-		nr := p.rowCount[i]
-		if nr.Contains(r) {
-			return i
-		}
-	}
 }
 
 //IncRow increments the number of times a row has been picked.
@@ -61,21 +48,10 @@ func (p Picker) IncrRow(rownum, curr_n int) {
 	p.rowCount[curr_n].Remove(rownum)
 	// if there isnt a set of rows for curr_n + 1 # of calls, make one
 	if _, ok := p.rowCount[curr_n+1]; !ok {
-		p.rowCount[curr_n+1] = NewIntSet()
+		p.rowCount[curr_n+1] = utils.NewIntSet()
 	}
 
 	p.rowCount[curr_n+1].Add(rownum)
-}
-
-func (p Picker) Dump() {
-	count := 0
-	for i := 0; ; i++ {
-		r := p.rowCount[i]
-		count += r.Size()
-		if count >= 9 {
-			break
-		}
-	}
 }
 
 func (p Picker) Pick() int {

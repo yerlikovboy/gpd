@@ -28,6 +28,6 @@ func (b Board) ClueCount() uint8 {
 			c++
 		}
 	}
-	return c
+	return (81 - c)
 
 }
