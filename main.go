@@ -21,11 +21,10 @@ func app(is_daemon bool, n_clues uint8) {
 	}
 
 }
-func main() {
 
+func main() {
 	num_clues := flag.Uint("n", 38, "number of clues (default 38)")
 	is_daemon := flag.Bool("d", false, "run as daemon")
 	flag.Parse()
 	app(*is_daemon, uint8(*num_clues))
-
 }

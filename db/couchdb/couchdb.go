@@ -1,6 +1,7 @@
 package couchdb
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -112,11 +113,18 @@ func (s CouchSudokuDB) Solution() sudoku.Board {
 func (s CouchSudokuDB) StorePuzzle(b sudoku.Board) {
 	// for now, just print it to console
 	p := FromBoard(b)
-	raw, err := json.Marshal(p)
+	raw, _ := json.Marshal(p)
+	fmt.Println(string(raw))
 
+	req, _ := http.NewRequest("POST", "http://localhost:5984/puzzles", bytes.NewBuffer(raw))
+	s.cfg.SetupRequest(req)
+
+	resp, err := s.clnt.Do(req)
 	if err != nil {
 		log.Fatal(err)
 	}
+	if resp.StatusCode != 201 {
+		log.Printf("puzzle upload status code: %v", resp.StatusCode)
+	}
 
-	fmt.Println(string(raw))
 }

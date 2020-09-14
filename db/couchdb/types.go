@@ -16,7 +16,7 @@ type grid struct {
 }
 
 type Puzzle struct {
-	ID              string      `json:"id"`
+	ID              string      `json:"_id:,omitempty"`
 	NumClues        uint8       `json:"n_clues"`
 	Cells           sudoku.Grid `json:"grid"`
 	SolutionID      string      `json:"solution_id"`

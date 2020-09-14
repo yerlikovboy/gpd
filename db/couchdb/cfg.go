@@ -63,7 +63,7 @@ func db_port() string {
 }
 
 func db_hostname() string {
-	host := os.Getenv("DB_HOSTNAME")
+	host := os.Getenv("DB_HOST")
 	if host == "" {
 		return "localhost"
 	}

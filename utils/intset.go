@@ -1,4 +1,4 @@
-package puzzler
+package utils
 
 type IntSet struct {
 	setMap map[int]bool
@@ -11,9 +11,9 @@ func NewIntSet() IntSet {
 }
 
 func (s IntSet) Add(n int) {
-	if _, ok := s.setMap[n]; !ok {
-		s.setMap[n] = true
-	}
+	//	if _, ok := s.setMap[n]; !ok {
+	s.setMap[n] = true
+	//	}
 }
 
 func (s IntSet) Remove(n int) {
