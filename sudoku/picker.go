@@ -1,4 +1,4 @@
-package puzzler
+package sudoku
 
 import (
 	"gpd/utils"

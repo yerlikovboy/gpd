@@ -1,11 +1,10 @@
-package puzzler
+package sudoku
 
 import (
-	"gpd/sudoku"
 	"time"
 )
 
-func Make(g sudoku.Board, n_clues uint8) sudoku.Board {
+func MakePuzzle(g Board, n_clues uint8) Board {
 
 	picker := NewPicker()
 
@@ -27,10 +26,10 @@ func Make(g sudoku.Board, n_clues uint8) sudoku.Board {
 		*/
 	}
 
-	var grid sudoku.Grid
+	var grid Grid
 	copy(grid[:], g.Cells[0:81])
 
-	return sudoku.Board{
+	return Board{
 		Cells:     grid,
 		OriginID:  g.OriginID,
 		Timestamp: uint64(time.Now().UnixNano()),
