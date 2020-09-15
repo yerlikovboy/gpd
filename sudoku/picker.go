@@ -21,17 +21,17 @@ func initSet() utils.IntSet {
 }
 
 func NewPicker() Picker {
-	return NewPickerWithSeed(time.Now().UnixNano())
+	return *NewPickerWithSeed(time.Now().UnixNano())
 }
 
-func NewPickerWithSeed(seed int64) Picker {
+func NewPickerWithSeed(seed int64) *Picker {
 	rand.Seed(seed)
 	p := Picker{
 		rowCount: make(map[int]utils.IntSet),
 	}
 
 	p.rowCount[0] = initSet()
-	return p
+	return &p
 }
 
 func (p Picker) GetN(n int) utils.IntSet {

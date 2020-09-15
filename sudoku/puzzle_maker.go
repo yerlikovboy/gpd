@@ -18,12 +18,6 @@ func MakePuzzle(g Board, n_clues uint8) Board {
 			g.Cells[p] = 0
 			i++
 		}
-
-		/*
-			if i == n_blanks {
-				break
-			}
-		*/
 	}
 
 	var grid Grid
