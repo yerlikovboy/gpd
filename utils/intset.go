@@ -46,3 +46,15 @@ func (s IntSet) Members() []int {
 
 	return r
 }
+
+func (s IntSet) MembersUInt8() []uint8 {
+
+	var r []uint8
+	for k, v := range s.setMap {
+		if v {
+			r = append(r, uint8(k))
+		}
+	}
+
+	return r
+}
