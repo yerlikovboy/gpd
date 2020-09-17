@@ -37,6 +37,15 @@ func (b Board) NumClues() uint8 {
 	return c
 }
 
+func (b Board) IsSolved() bool {
+	for _, v := range b.grid {
+		if v == 0 {
+			return false
+		}
+	}
+	return true
+}
+
 func (b Board) RowIdx(rowNum uint8) []uint8 {
 	rv, _ := b.rowIdx[rowNum]
 	return rv[:]
