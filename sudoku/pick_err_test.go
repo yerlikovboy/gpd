@@ -157,7 +157,7 @@ func TestColGroups(t *testing.T) {
 	}
 
 	for _, v := range test_cases {
-		actual := col_groups(v.input)
+		actual := col_groups(v.input[:])
 
 		if len(actual) != len(v.expected) {
 			t.Errorf("incorrect length: expect: %v, actual: %v", v.expected, actual)

@@ -1,10 +1,18 @@
 package sudoku
 
 import (
-	"log"
 	"math/rand"
 	"time"
 )
+
+type DimType int
+
+const (
+	ByRowOffset    = 1
+	ByColumnOffset = 9
+)
+
+type GroupFinder func([]uint8) []ClueGroup
 
 // ClueGroup is a data structure that denotes areas in a row or column where
 // there are more than one values next to each other.
@@ -15,12 +23,14 @@ import (
 type ClueGroup struct {
 	Start  uint8
 	Length uint8
+	Offset uint8
 }
 
-func NewClueGroup(s, l int) ClueGroup {
+func NewClueGroup(s, l, offset int) ClueGroup {
 	return ClueGroup{
 		Start:  uint8(s),
 		Length: uint8(l),
+		Offset: uint8(offset),
 	}
 }
 
@@ -43,18 +53,18 @@ func Find(r []uint8) []ClueGroup {
 		}
 
 		if v == 0 && s != -1 {
-			res = append(res, NewClueGroup(s, i-s))
+			res = append(res, NewClueGroup(s, i-s, ByRowOffset))
 			s = -1
 		}
 	}
 	// if its at the end
 	if s != -1 {
-		res = append(res, NewClueGroup(s, len(r)-s))
+		res = append(res, NewClueGroup(s, len(r)-s, ByRowOffset))
 	}
 	return res
 }
 
-func col_groups(g Grid) []ClueGroup {
+func col_groups(g []uint8) []ClueGroup {
 
 	var res []ClueGroup
 
@@ -72,26 +82,24 @@ func col_groups(g Grid) []ClueGroup {
 			} else if v == 0 && s != -1 {
 				// end of clue group
 				len := (idx - s) / 9
-				res = append(res, NewClueGroup(s, len))
+				res = append(res, NewClueGroup(s, len, ByColumnOffset))
 				s = -1
 			}
 		}
 		if s != -1 {
 			len := (81 + c - s) / 9
-			res = append(res, NewClueGroup(s, len))
+			res = append(res, NewClueGroup(s, len, ByColumnOffset))
 		}
 	}
-
 	return res
 }
 
-func candidates(g Grid) []uint8 {
+func candidates(g Grid, finder GroupFinder) []uint8 {
 
 	var r []uint8
 
-	cgs := Find(g[:])
+	cgs := finder(g[:])
 
-	log.Printf("cgs: %v", cgs)
 	for _, cg := range cgs {
 
 		multiplier := cg.Length
@@ -105,7 +113,7 @@ func candidates(g Grid) []uint8 {
 			tmp := make([]uint8, cg.Length)
 			var j uint8
 			for j = 0; j < cg.Length; j++ {
-				tmp[j] = cg.Start + j
+				tmp[j] = cg.Start + j*cg.Offset
 			}
 			r = append(r, tmp[:]...)
 		}
@@ -116,7 +124,6 @@ func candidates(g Grid) []uint8 {
 
 func Make(s Board, num_clues uint8) Board {
 
-	log.Printf("making puzzle with %v clues", num_clues)
 	rand.Seed(time.Now().UnixNano())
 	var lc Grid
 	cells := s.Cells()
@@ -124,11 +131,16 @@ func Make(s Board, num_clues uint8) Board {
 
 	var i uint8
 	num_zeros := 81 - num_clues
+	var fnMap = map[uint8]GroupFinder{
+		0: Find,
+		1: col_groups,
+	}
 	for i = 0; i < num_zeros; i++ {
-		c := candidates(lc)
+
+		c := candidates(lc, fnMap[i%2])
+
 		pick_idx := rand.Intn(len(c))
 		pick := c[pick_idx]
-		log.Printf("pick_idx: %v, pick: %v, len(c): %v", pick_idx, pick, len(c))
 		lc[pick] = 0
 	}
 
