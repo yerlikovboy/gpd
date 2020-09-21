@@ -1,6 +1,8 @@
-package builder
+package sudoku
 
-import "testing"
+import (
+	"testing"
+)
 
 var rowtests = []struct {
 	tc       uint8
@@ -116,3 +118,18 @@ func TestIsSolved(t *testing.T) {
 	}
 
 }
+
+/*
+func TestMe(t *testing.T) {
+
+	a := []uint8{0, 1, 2, 3, 4, 5}
+	b := [4]uint8{6, 7, 8, 9}
+
+	fmt.Printf("before a: %v, b: %v\n", a, b)
+	a = append(a, b[:]...)
+	fmt.Printf("after  a: %v, b: %v\n", a, b)
+	a = append(a, b[:]...)
+	fmt.Printf("final  a: %v, b: %v\n", a, b)
+
+}
+*/

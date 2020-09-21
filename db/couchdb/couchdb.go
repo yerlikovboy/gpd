@@ -97,17 +97,15 @@ func (s CouchSudokuDB) nth_grid(n uint32) grid {
 }
 
 func (s CouchSudokuDB) Solution() sudoku.Board {
-
 	rowCount := s.puzzle_count()
 	pick := uint32(rand.Int31n(int32(rowCount)))
 	grid := s.nth_grid(pick)
 	var c sudoku.Grid
 	copy(c[:], grid.Value[0:81])
-	return sudoku.Board{
-		OriginID:  grid.ID,
-		Timestamp: grid.Timestamp,
-		Cells:     c,
-	}
+
+	return sudoku.NewBoard(c).
+		WithCreatedTS(grid.Timestamp).
+		WithID(grid.ID)
 }
 
 func (s CouchSudokuDB) StorePuzzle(b sudoku.Board) {
@@ -124,7 +122,7 @@ func (s CouchSudokuDB) StorePuzzle(b sudoku.Board) {
 		log.Fatal(err)
 	}
 	if resp.StatusCode != 201 {
-		log.Printf("puzzle upload status code: %v", resp.StatusCode)
+		log.Printf("puzzle upload status code: %v", resp)
 	}
 
 }

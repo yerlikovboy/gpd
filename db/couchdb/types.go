@@ -16,7 +16,7 @@ type grid struct {
 }
 
 type Puzzle struct {
-	ID              string      `json:"_id:,omitempty"`
+	ID              string      `json:"_id,omitempty"`
 	NumClues        uint8       `json:"n_clues"`
 	Cells           sudoku.Grid `json:"grid"`
 	SolutionID      string      `json:"solution_id"`
@@ -24,11 +24,10 @@ type Puzzle struct {
 }
 
 func FromBoard(b sudoku.Board) Puzzle {
-
 	return Puzzle{
-		NumClues:        b.ClueCount(),
-		Cells:           b.Cells,
-		SolutionID:      b.OriginID,
-		GeneratedMillis: b.Timestamp,
+		NumClues:        b.NumClues(),
+		Cells:           b.Cells(),
+		SolutionID:      b.DerivedFromID(),
+		GeneratedMillis: b.CreatedTS(),
 	}
 }
