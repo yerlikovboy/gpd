@@ -1,6 +1,8 @@
-package builder
+package sudoku
 
-import "testing"
+import (
+	"testing"
+)
 
 var rowtests = []struct {
 	tc       uint8

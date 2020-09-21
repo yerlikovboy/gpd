@@ -11,7 +11,7 @@ func app(is_daemon bool, n_clues uint8) {
 	for {
 		db := couchdb.New()
 		g := db.Solution()
-		p := sudoku.MakePuzzle(g, n_clues)
+		p := sudoku.Make(g, n_clues)
 		db.StorePuzzle(p)
 
 		if !is_daemon {

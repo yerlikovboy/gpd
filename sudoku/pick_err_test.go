@@ -1,73 +1,71 @@
 package sudoku
 
 import (
-	"fmt"
 	"testing"
 )
 
 type TestCase struct {
-	input    Row
-	expected []Contigs
+	input    Dim
+	expected []ClueGroup
 }
 
-func TestGaps(t *testing.T) {
+func TestFind(t *testing.T) {
 
 	tc := []TestCase{
 		TestCase{
-			input: Row{1, 2, 3, 4, 5, 6, 7, 8, 9},
-			expected: []Contigs{
-				Contigs{Start: 0, End: 9, Length: 9},
+			input: Dim{1, 2, 3, 4, 5, 6, 7, 8, 9},
+			expected: []ClueGroup{
+				ClueGroup{Start: 0, Length: 9},
 			},
 		},
 		TestCase{
-			input: Row{1, 2, 3, 0, 5, 6, 7, 8, 9},
-			expected: []Contigs{
-				Contigs{Start: 0, End: 3, Length: 3},
-				Contigs{Start: 4, End: 9, Length: 5},
+			input: Dim{1, 2, 3, 0, 5, 6, 7, 8, 9},
+			expected: []ClueGroup{
+				ClueGroup{Start: 0, Length: 3},
+				ClueGroup{Start: 4, Length: 5},
 			},
 		},
 		TestCase{
-			input: Row{0, 2, 3, 0, 5, 6, 7, 8, 9},
-			expected: []Contigs{
-				Contigs{Start: 1, End: 3, Length: 2},
-				Contigs{Start: 4, End: 9, Length: 5},
+			input: Dim{0, 2, 3, 0, 5, 6, 7, 8, 9},
+			expected: []ClueGroup{
+				ClueGroup{Start: 1, Length: 2},
+				ClueGroup{Start: 4, Length: 5},
 			},
 		},
 		TestCase{
-			input: Row{0, 2, 3, 0, 5, 6, 7, 8, 0},
-			expected: []Contigs{
-				Contigs{Start: 1, End: 3, Length: 2},
-				Contigs{Start: 4, End: 8, Length: 4},
+			input: Dim{0, 2, 3, 0, 5, 6, 7, 8, 0},
+			expected: []ClueGroup{
+				ClueGroup{Start: 1, Length: 2},
+				ClueGroup{Start: 4, Length: 4},
 			},
 		},
 		TestCase{
-			input: Row{0, 2, 3, 0, 5, 6, 7, 0, 0},
-			expected: []Contigs{
-				Contigs{Start: 1, End: 3, Length: 2},
-				Contigs{Start: 4, End: 7, Length: 3},
+			input: Dim{0, 2, 3, 0, 5, 6, 7, 0, 0},
+			expected: []ClueGroup{
+				ClueGroup{Start: 1, Length: 2},
+				ClueGroup{Start: 4, Length: 3},
 			},
 		},
 		TestCase{
-			input: Row{0, 2, 3, 4, 0, 0, 0, 0, 0},
-			expected: []Contigs{
-				Contigs{Start: 1, End: 4, Length: 3},
+			input: Dim{0, 2, 3, 4, 0, 0, 0, 0, 0},
+			expected: []ClueGroup{
+				ClueGroup{Start: 1, Length: 3},
 			},
 		},
 		TestCase{
-			input: Row{0, 2, 3, 0, 5, 0, 0, 8, 0},
-			expected: []Contigs{
-				Contigs{Start: 1, End: 3, Length: 2},
-				Contigs{Start: 4, End: 5, Length: 1},
-				Contigs{Start: 7, End: 8, Length: 1},
+			input: Dim{0, 2, 3, 0, 5, 0, 0, 8, 0},
+			expected: []ClueGroup{
+				ClueGroup{Start: 1, Length: 2},
+				ClueGroup{Start: 4, Length: 1},
+				ClueGroup{Start: 7, Length: 1},
 			},
 		},
 	}
 
 	for _, v := range tc {
-		actual := Gaps(v.input)
+		actual := Find(v.input[:])
 
 		if len(actual) != len(v.expected) {
-			fmt.Println(actual)
 			t.Errorf("incorrect length: expect: %v, actual: %v", len(v.expected), len(actual))
 		}
 
@@ -87,4 +85,82 @@ func TestGaps(t *testing.T) {
 
 	}
 
+}
+
+func TestColGroups(t *testing.T) {
+
+	/* test_cases := []struct {
+		tc: Grid
+		expected: []ClueGroup
+	}{
+		input: Grid{0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} ,
+		expected: []ClueGroup{},
+
+	}
+	*/
+	test_cases := []struct {
+		input    Grid
+		expected []ClueGroup
+	}{
+		{
+			input: Grid{
+				0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0},
+			expected: []ClueGroup{},
+		},
+		{
+			input: Grid{
+				1, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0},
+			expected: []ClueGroup{
+				ClueGroup{Start: 0, Length: 1},
+			},
+		},
+		{
+			input: Grid{
+				0, 1, 0, 0, 0, 0, 0, 1, 0,
+				0, 2, 0, 1, 0, 1, 0, 2, 0,
+				0, 3, 0, 0, 0, 2, 0, 3, 0,
+				0, 0, 0, 2, 0, 0, 0, 4, 0,
+				0, 0, 0, 0, 0, 0, 0, 5, 0,
+				0, 4, 0, 3, 0, 0, 0, 6, 0,
+				0, 5, 0, 0, 0, 0, 0, 7, 0,
+				0, 0, 0, 4, 0, 8, 0, 8, 0,
+				0, 0, 0, 0, 0, 9, 0, 9, 1},
+			expected: []ClueGroup{
+				ClueGroup{Start: 1, Length: 3},
+				ClueGroup{Start: 46, Length: 2},
+				ClueGroup{Start: 12, Length: 1},
+				ClueGroup{Start: 30, Length: 1},
+				ClueGroup{Start: 48, Length: 1},
+				ClueGroup{Start: 66, Length: 1},
+				ClueGroup{Start: 14, Length: 2},
+				ClueGroup{Start: 68, Length: 2},
+				ClueGroup{Start: 7, Length: 9},
+				ClueGroup{Start: 80, Length: 1},
+			},
+		},
+	}
+
+	for _, v := range test_cases {
+		actual := col_groups(v.input)
+
+		if len(actual) != len(v.expected) {
+			t.Errorf("incorrect length: expect: %v, actual: %v", v.expected, actual)
+		}
+	}
 }
