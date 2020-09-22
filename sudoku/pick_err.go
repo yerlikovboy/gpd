@@ -5,8 +5,6 @@ import (
 	"time"
 )
 
-type DimType int
-
 const (
 	ByRowOffset    = 1
 	ByColumnOffset = 9
@@ -36,10 +34,11 @@ func NewClueGroup(s, l, offset int) ClueGroup {
 
 func IsEqual(l, r *ClueGroup) bool {
 	return l.Start == r.Start &&
-		l.Length == r.Length
+		l.Length == r.Length &&
+		l.Offset == r.Offset
 }
 
-func Find(r []uint8) []ClueGroup {
+func scan_rows(r []uint8) []ClueGroup {
 	// -1 means we currently are not on a contiguous set of clues
 	s := -1
 
@@ -64,7 +63,7 @@ func Find(r []uint8) []ClueGroup {
 	return res
 }
 
-func col_groups(g []uint8) []ClueGroup {
+func scan_columns(g []uint8) []ClueGroup {
 
 	var res []ClueGroup
 
@@ -132,8 +131,8 @@ func Make(s Board, num_clues uint8) Board {
 	var i uint8
 	num_zeros := 81 - num_clues
 	var fnMap = map[uint8]GroupFinder{
-		0: Find,
-		1: col_groups,
+		0: scan_rows,
+		1: scan_columns,
 	}
 	for i = 0; i < num_zeros; i++ {
 
