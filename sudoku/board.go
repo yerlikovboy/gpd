@@ -40,7 +40,7 @@ func (b Board) WithDerivedFromID(id string) Board {
 
 func (b Board) WithCreatedTS(ts uint64) Board {
 	newObj := b
-	newObj.createdTS = b.createdTS
+	newObj.createdTS = ts
 	return newObj
 }
 
